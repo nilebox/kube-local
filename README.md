@@ -27,7 +27,7 @@ And if you want to make 'localkube' your default context, run:
 ====================================================================
 ```
 Once you finished, you should be able to run commands agaist locally running Kubernetes 
-cluster using `kubectl` the same way you normally do for remote clusters:
+cluster using `kubectl` the same way you normally do for remote clusters, for example:
 ```
 kubectl get pods
 ```
@@ -39,3 +39,7 @@ Run `./kube-down.sh`
 # Destroying VM with Kubernetes cluster
 
 Run `./kube-destroy.sh`
+
+# Credits
+
+The `Vagrantfile` used in this project is based on @lizrice's [gist](https://gist.github.com/lizrice/69d3b28979391287176b3b7155a327b9) with minor tweaks and extra automation of manual steps described in https://medium.com/@lizrice/kubernetes-in-vagrant-with-kubeadm-21979ded6c63
