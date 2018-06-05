@@ -34,11 +34,17 @@ echo This VM has IP address $IPADDR
 NODENAME=$(hostname -s)
 kubeadm init --apiserver-cert-extra-sans=$IPADDR  --node-name $NODENAME
 
-# Set up admin creds for the vagrant user
+# Set up admin creds for the vagrant user (to let user `vagrant ssh` and run kubectl)
 echo Copying credentials to /home/vagrant...
 sudo --user=vagrant mkdir -p /home/vagrant/.kube
 cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
 chown $(id -u vagrant):$(id -g vagrant) /home/vagrant/.kube/config
+
+# Set up admin creds for the current user (to be able to run kubectl within Vagrantfile)
+echo Copying credentials to $HOME...
+mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+chown $(id -u $USER):$(id -g $USER) $HOME/.kube/config
 
 # Wait until Kubernetes cluster is ready
 echo "Waiting for Kubernetes cluster to become ready"
