@@ -7,11 +7,11 @@ vagrant up
 
 # Get internal VM IP address
 INTERNAL_IP=$(vagrant ssh -c "ifconfig eth0 | grep Mask | awk '{print \$2}' | cut -f2 -d: | tr -d '\n'")
-echo VM has internal IP address A${INTERNAL_IP}Z
+echo VM internal IP address is $INTERNAL_IP
 
 # Get external VM IP address
 EXTERNAL_IP=$(vagrant ssh -c "ifconfig eth1 | grep Mask | awk '{print \$2}' | cut -f2 -d: | tr -d '\n'")
-echo VM has external IP address $EXTERNAL_IP
+echo VM external IP address is $EXTERNAL_IP
 
 # Prepare config file
 vagrant ssh -c "sudo cat /etc/kubernetes/admin.conf" > localkube.conf
