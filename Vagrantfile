@@ -25,9 +25,8 @@ sed -i '0,/[Service]/a\
 Environment="KUBELET_EXTRA_ARGS=--cgroup-driver=cgroupfs"' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 # Get the IP address that VirtualBox has given this VM
-# There is no way to create a network interface with a custom name, see https://github.com/hashicorp/vagrant/issues/8322
-# Thus, reusing `eth0` that is specific to bento, see https://github.com/chef/bento/pull/900
-IPADDR=`ifconfig eth0 | grep Mask | awk '{print $2}'| cut -f2 -d:`
+# `eth1` is the name of network interface created via `config.vm.network` below
+IPADDR=`ifconfig eth1 | grep Mask | awk '{print $2}' | cut -f2 -d: | tr -d '\n'`
 echo This VM has IP address $IPADDR
 
 # Set up Kubernetes
@@ -79,6 +78,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "localkube"
   config.vm.hostname = "localkube"
   config.vm.box = "bento/ubuntu-16.04"
+  config.vm.network "private_network", type: "dhcp"
   config.vm.provision "docker"
   config.vm.provision "shell", inline: $script
 end
