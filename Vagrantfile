@@ -41,19 +41,30 @@ cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
 chown $(id -u vagrant):$(id -g vagrant) /home/vagrant/.kube/config
 
 # Wait until Kubernetes cluster is ready
+echo "Waiting for Kubernetes cluster to become ready"
+kube_ready=false
 for i in {1..150}; do # timeout for 5 minutes
-  ./kubectl get po &> /dev/null
-  if [ $? -ne 1 ]; then
-      break
+  if ! kubectl get pods > /dev/null; then
+    echo "Kubernetes cluster is not ready"
+    sleep 2
+    continue
   fi
-  echo "Kubernetes cluster is not ready"
-  sleep 2
+  echo "Kubernetes cluster is ready"
+  kube_ready=true
+  break
 done
 
+if [ ! "$kube_ready" = true ] ; then
+    echo 'Timed out waiting for Kubernetes to become ready'
+    exit 1
+fi
+
 # Install a pod network
+echo "Installing a pod network (Weave)"
 kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')
 
 # Allow pods to run on the master node
+echo "Allowing pods to run on the master node"
 kubectl taint nodes --all node-role.kubernetes.io/master-
 
 SCRIPT
