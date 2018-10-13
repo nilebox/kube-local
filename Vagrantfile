@@ -15,7 +15,7 @@ apt-get install -y kubelet kubeadm kubectl
 # kubelet requires swap off
 swapoff -a
 # keep swap off after reboot
-sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+sudo sed -i '/swap/d' /etc/fstab
 
 # Make sure that the cgroup driver used by kubelet is the same as the one used by Docker.
 # see https://kubernetes.io/docs/tasks/tools/install-kubeadm/#configure-cgroup-driver-used-by-kubelet-on-master-node
